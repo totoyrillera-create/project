@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FIREWATCH — Dashboard</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
+</head>
+<body>
+
+<div class="emg-overlay"></div>
+
+<div class="shell">
+  <button class="sidebar-toggle" aria-label="Toggle sidebar" aria-expanded="false">
+    <div class="toggle-icon"><span></span><span></span><span></span></div>
+  </button>
+
+  <div class="sidebar-backdrop"></div>
+
+  <aside class="sidebar">
+    <a class="sidebar-brand" href="dashboard.html">
+      <div class="brand-icon">🔥</div>
+      <div class="brand-text"><strong>FIREWATCH</strong><span>Unit 001</span></div>
+    </a>
+    <nav class="sidebar-nav">
+      <span class="nav-section">Monitor</span>
+      <a class="nav-link active" href="dashboard.html"><span class="nav-icon">📊</span> Dashboard</a>
+      <a class="nav-link" href="analytics.html"><span class="nav-icon">📈</span> Analytics</a>
+      <a class="nav-link" href="logs.html"><span class="nav-icon">📋</span> Incident Log<span class="nav-badge" id="sidebarBadge">0</span></a>
+      <span class="nav-section">Control</span>
+      <a class="nav-link nav-emg" href="emergency.html"><span class="nav-icon">⚠️</span> Emergency</a>
+    </nav>
+    <div class="settings-drawer" id="settingsDrawer">
+      <div class="settings-header">
+        <span class="settings-title">Account &amp; Settings</span>
+        <button class="settings-close" onclick="closeSettings();event.stopPropagation()">✕</button>
+      </div>
+      <div class="settings-body">
+        <div class="settings-item" onclick="event.stopPropagation()">
+          <span class="settings-ico">🌙</span>
+          <span class="settings-label">Light Mode</span>
+          <div class="toggle-sw" id="swLight"></div>
+        </div>
+        <a class="settings-item" href="requests.html" id="reqsLink" style="display:none;">
+          <span class="settings-ico">🔔</span>
+          <span class="settings-label">Access Requests</span>
+          <span class="nav-badge" id="reqsBadge" style="margin-left:auto;">0</span>
+        </a>
+        <a class="settings-item" href="users.html">
+          <span class="settings-ico">👥</span>
+          <span class="settings-label">Manage Users</span>
+          <span style="font-size:0.7rem;color:var(--c-text3);">→</span>
+        </a>
+        <div class="settings-item danger" onclick="logout()">
+          <span class="settings-ico">🚪</span>
+          <span class="settings-label">Logout</span>
+        </div>
+      </div>
+    </div>
+    <div class="sidebar-user" id="sidebarUserRow">
+      <div class="user-av">👤</div>
+      <div class="user-info">
+        <div class="user-name" id="userName">Admin</div>
+        <div class="user-role" id="userRole">Administrator</div>
+      </div>
+      <span class="user-chevron">▲</span>
+    </div>
+  </aside>
+
+  <div class="main-wrap">
+    <header class="topbar">
+      <div class="topbar-title">Dashboard</div>
+      <div class="topbar-right">
+        <div class="status-pill online" id="arduinoPill">
+          <span class="pulse-dot" id="arduinoDot"></span>
+          <span id="arduinoLabel">Connecting…</span>
+        </div>
+        <span class="topbar-clock" id="clock">00:00:00</span>
+      </div>
+    </header>
+
+    <main class="page-content">
+
+      <!-- Row 1 -->
+      <div class="g2 gap-b stagger">
+
+        <div class="card anim-up">
+          <div class="card-label">Fire Risk Assessment</div>
+          <div class="risk-hero">
+            <div class="ring-wrap">
+              <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+                <circle class="ring-bg" cx="60" cy="60" r="54"/>
+                <circle class="ring-fill" id="ringFill" cx="60" cy="60" r="54"
+                  stroke="#00e676" stroke-dasharray="339.3" stroke-dashoffset="339.3"/>
+              </svg>
+              <div class="ring-center">
+                <span class="ring-pct" id="riskPct">--</span>
+                <span class="ring-lbl" id="riskLvl">OFFLINE</span>
+              </div>
+            </div>
+            <div class="risk-details">
+              <div class="risk-title" id="riskTitle">No Connection</div>
+              <div class="risk-subtitle">Predictive Risk Engine</div>
+              <div class="risk-scale">
+                <div class="rs-row"><span class="rs-label">Safe</span><div class="rs-bar rs-bar-safe"></div><span class="rs-range" style="color:var(--c-safe);">0–35%</span></div>
+                <div class="rs-row"><span class="rs-label">Warning</span><div class="rs-bar rs-bar-warn"></div><span class="rs-range" style="color:var(--c-warn);">35–70%</span></div>
+                <div class="rs-row"><span class="rs-label">Critical</span><div class="rs-bar rs-bar-danger"></div><span class="rs-range" style="color:var(--c-danger);">70–100%</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card anim-up">
+          <div class="card-label">Zone Map — Floor 1</div>
+          <div class="zone-single" id="zoneMain">
+            <span class="zone-label">ROOM</span>
+            <span class="zone-status" id="zoneStatusLabel">● Offline</span>
+          </div>
+          <div class="flex-row flex-wrap gap-sm mt-sm">
+            <span class="badge badge-safe" id="zoneBadge">● Safe</span>
+            <span class="badge badge-info" id="arduinoBadge">Arduino Uno</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Row 2 -->
+      <div class="g3 gap-b stagger">
+
+        <div class="card anim-up">
+          <div class="card-label">Temperature</div>
+          <div>
+            <span class="sensor-val" id="tempVal">--</span>
+            <span class="sensor-unit" id="tempUnit"></span>
+          </div>
+          <div class="bar-track">
+            <div class="bar-fill bar-muted" id="tempBar" style="width:0%;"></div>
+          </div>
+          <div class="sensor-meta" id="tempMeta">No sensor data</div>
+        </div>
+
+        <div class="card anim-up">
+          <div class="card-label">Smoke (MQ-2)</div>
+          <div>
+            <span class="sensor-val" id="smokeVal">--</span>
+            <span class="sensor-unit" id="smokeUnit"></span>
+          </div>
+          <div class="bar-track">
+            <div class="bar-fill bar-muted" id="smokeBar" style="width:0%;"></div>
+          </div>
+          <div class="sensor-meta" id="smokeMeta">No sensor data</div>
+        </div>
+
+        <div class="card anim-up">
+          <div class="card-label">Flame (IR)</div>
+          <div class="mt-sm">
+            <span class="sensor-val flame-val" id="flameVal">--</span>
+          </div>
+          <div class="divider-line"></div>
+          <div class="flex-row gap-sm">
+            <span class="dot dot-off" id="flameDot"></span>
+            <span class="sensor-meta" id="flameMeta">No sensor data</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Row 3 -->
+      <div class="g2 stagger">
+
+        <div class="card anim-up">
+          <div class="card-label">System Components</div>
+          <div class="comp-row">
+            <span class="dot dot-off" id="dotArduino"></span>
+            <span class="comp-name">Arduino Uno</span>
+            <span class="comp-status" id="stArduino" style="color:var(--c-text3);">OFFLINE</span>
+          </div>
+          <div class="comp-row">
+            <span class="dot dot-off" id="dotBuzzer"></span>
+            <span class="comp-name">Alarm Buzzer</span>
+            <span class="comp-status" id="stBuzzer" style="color:var(--c-text2);">--</span>
+          </div>
+          <div class="comp-row">
+            <span class="dot dot-off" id="dotFan"></span>
+            <span class="comp-name">Exhaust Fan</span>
+            <span class="comp-status" id="stFan" style="color:var(--c-text2);">--</span>
+          </div>
+          <div class="comp-row">
+            <span class="dot dot-off" id="dotSprinkler"></span>
+            <span class="comp-name">Sprinkler System</span>
+            <span class="comp-status" id="stSprinkler" style="color:var(--c-text2);">--</span>
+          </div>
+        </div>
+
+        <div class="card anim-up">
+          <div class="card-label">Real-Time Alerts</div>
+          <div class="alert-feed" id="alertFeed">
+            <div class="alert-item info">
+              <span class="alert-ico">🔔</span>
+              <div class="alert-body">
+                <div class="alert-title">System Online — All Clear</div>
+                <div class="alert-time">Just now</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+
+    <footer class="footer">
+      <span>© 2026 FIREWATCH · Unit 001</span>
+      <span>fourloop@gmail.com · +63 912 345 6789</span>
+      <span>v2.0.1</span>
+    </footer>
+  </div>
+</div>
+
+<script src="../assets/js/app.js"></script>
+<script src="../assets/js/dashboard.js"></script>
+
+</body>
+</html>

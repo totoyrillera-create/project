@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FIREWATCH — Manage Users</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="../assets/css/users.css">
+</head>
+<body>
+
+<div class="shell">
+  <button class="sidebar-toggle" aria-label="Toggle sidebar" aria-expanded="false">
+    <div class="toggle-icon"><span></span><span></span><span></span></div>
+  </button>
+
+  <div class="sidebar-backdrop"></div>
+
+  <aside class="sidebar">
+    <a class="sidebar-brand" href="dashboard.html">
+      <div class="brand-icon">🔥</div>
+      <div class="brand-text"><strong>FIREWATCH</strong><span>Unit 001</span></div>
+    </a>
+    <nav class="sidebar-nav">
+      <span class="nav-section">Monitor</span>
+      <a class="nav-link" href="dashboard.html"><span class="nav-icon">📊</span> Dashboard</a>
+      <a class="nav-link" href="analytics.html"><span class="nav-icon">📈</span> Analytics</a>
+      <a class="nav-link" href="logs.html"><span class="nav-icon">📋</span> Incident Log<span class="nav-badge" id="sidebarBadge">0</span></a>
+      <span class="nav-section">Control</span>
+      <a class="nav-link nav-emg" href="emergency.html"><span class="nav-icon">⚠️</span> Emergency</a>
+    </nav>
+    <div class="settings-drawer" id="settingsDrawer">
+      <div class="settings-header">
+        <span class="settings-title">Account &amp; Settings</span>
+        <button class="settings-close" onclick="closeSettings();event.stopPropagation()">✕</button>
+      </div>
+      <div class="settings-body">
+        <div class="settings-item" onclick="event.stopPropagation()">
+          <span class="settings-ico">🌙</span>
+          <span class="settings-label">Light Mode</span>
+          <div class="toggle-sw" id="swLight"></div>
+        </div>
+        <a class="settings-item" href="requests.html" id="reqsLink" style="display:none;">
+          <span class="settings-ico">🔔</span>
+          <span class="settings-label">Access Requests</span>
+          <span class="nav-badge" id="reqsBadge" style="margin-left:auto;">0</span>
+        </a>
+        <a class="settings-item active-link" href="users.html">
+          <span class="settings-ico">👥</span>
+          <span class="settings-label">Manage Users</span>
+          <span style="font-size:0.7rem;color:var(--c-fire);">→</span>
+        </a>
+        <div class="settings-item danger" onclick="logout()">
+          <span class="settings-ico">🚪</span>
+          <span class="settings-label">Logout</span>
+        </div>
+      </div>
+    </div>
+    <div class="sidebar-user" id="sidebarUserRow">
+      <div class="user-av">👤</div>
+      <div class="user-info">
+        <div class="user-name" id="userName">Admin</div>
+        <div class="user-role" id="userRole">Administrator</div>
+      </div>
+      <span class="user-chevron">▲</span>
+    </div>
+  </aside>
+
+  <div class="main-wrap">
+    <header class="topbar">
+      <div class="topbar-title">Manage Users</div>
+      <div class="topbar-right">
+        <div class="status-pill online">
+          <span class="pulse-dot"></span>
+          <span>System Online</span>
+        </div>
+        <span class="topbar-clock" id="clock">00:00:00</span>
+      </div>
+    </header>
+
+    <main class="page-content">
+
+      <div class="page-header anim-up">
+        <h2>User Management</h2>
+        <p>Add · Remove · Assign Roles</p>
+      </div>
+
+      <div class="g2 gap-b stagger">
+
+        <!-- Users list -->
+        <div class="card anim-up">
+          <div class="card-label">System Users</div>
+          <div class="ul-list" id="usersList"></div>
+        </div>
+
+        <!-- Add user form -->
+        <div class="card anim-up">
+          <div class="card-label">Add New User</div>
+
+          <div class="ul-form">
+            <div class="ul-field">
+              <label class="input-label" for="newUsername">Username</label>
+              <input class="input" type="text" id="newUsername" placeholder="e.g. john_doe" autocomplete="off">
+            </div>
+            <div class="ul-field">
+              <label class="input-label" for="newPass">Password</label>
+              <input class="input" type="password" id="newPass" placeholder="Set a password" autocomplete="new-password">
+            </div>
+            <div class="ul-field">
+              <label class="input-label" for="newRole">Role</label>
+              <select class="input" id="newRole">
+                <option value="Viewer">Viewer — Read-only access</option>
+                <option value="Operator">Operator — Can override actuators</option>
+                <option value="Administrator">Administrator — Full access</option>
+              </select>
+            </div>
+            <button class="btn btn-primary btn-full ul-submit" onclick="addUser()">+ Add User</button>
+            <p class="ul-error" id="addError"></p>
+          </div>
+
+          <div class="ul-roles-guide">
+            <div class="card-label" style="margin-top:20px;">Role Permissions</div>
+            <div class="role-row"><span class="role-badge role-viewer">Viewer</span><span class="role-desc">View dashboard and logs only</span></div>
+            <div class="role-row"><span class="role-badge role-operator">Operator</span><span class="role-desc">View + manually override actuators</span></div>
+            <div class="role-row"><span class="role-badge role-admin">Administrator</span><span class="role-desc">Full access including emergency control</span></div>
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+
+    <footer class="footer">
+      <span>© 2026 FIREWATCH · Unit 001</span>
+      <span>fourloop@gmail.com · +63 912 345 6789</span>
+      <span>v2.0.1</span>
+    </footer>
+  </div>
+</div>
+
+<div class="toast" id="toast">✓ Done</div>
+
+<!-- Delete confirm modal -->
+<div class="modal-overlay" id="deleteModal">
+  <div class="modal-box">
+    <div class="modal-icon">🗑️</div>
+    <div class="modal-title">Remove User</div>
+    <div class="modal-sub" id="deleteModalSub">Remove this user from the system?</div>
+    <div class="modal-btns">
+      <button class="btn btn-ghost btn-full" onclick="closeDeleteModal()">Cancel</button>
+      <button class="btn btn-danger btn-full" onclick="confirmDelete()">Remove</button>
+    </div>
+  </div>
+</div>
+
+<script src="../assets/js/app.js"></script>
+<script src="../assets/js/users.js"></script>
+
+</body>
+</html>

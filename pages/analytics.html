@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FIREWATCH — Analytics</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="../assets/css/analytics.css">
+</head>
+<body>
+
+  <div class="emg-overlay"></div>
+<div class="shell">
+  <button class="sidebar-toggle" aria-label="Toggle sidebar" aria-expanded="false">
+    <div class="toggle-icon"><span></span><span></span><span></span></div>
+  </button>
+
+    <div class="sidebar-backdrop"></div>
+  <aside class="sidebar">
+    <a class="sidebar-brand" href="dashboard.html">
+      <div class="brand-icon">🔥</div>
+      <div class="brand-text"><strong>FIREWATCH</strong><span>Unit 001</span></div>
+    </a>
+    <nav class="sidebar-nav">
+      <span class="nav-section">Monitor</span>
+      <a class="nav-link" href="dashboard.html"><span class="nav-icon">📊</span> Dashboard</a>
+      <a class="nav-link active"  href="analytics.html"><span class="nav-icon">📈</span> Analytics</a>
+      <a class="nav-link"  href="logs.html"><span class="nav-icon">📋</span> Incident Log<span class="nav-badge" id="sidebarBadge">0</span></a>
+      <span class="nav-section">Control</span>
+      <a class="nav-link nav-emg" href="emergency.html"><span class="nav-icon">⚠️</span> Emergency</a>
+    </nav>
+    <div class="settings-drawer" id="settingsDrawer">
+      <div class="settings-header">
+        <span class="settings-title">Account &amp; Settings</span>
+        <button class="settings-close" onclick="closeSettings();event.stopPropagation()">✕</button>
+      </div>
+      <div class="settings-body">
+        <div class="settings-item" onclick="event.stopPropagation()">
+          <span class="settings-ico">🌙</span>
+          <span class="settings-label">Light Mode</span>
+          <div class="toggle-sw" id="swLight"></div>
+        </div>
+        <a class="settings-item" href="requests.html" id="reqsLink" style="display:none;">
+          <span class="settings-ico">🔔</span>
+          <span class="settings-label">Access Requests</span>
+          <span class="nav-badge" id="reqsBadge" style="margin-left:auto;">0</span>
+        </a>
+        <a class="settings-item" href="users.html">
+          <span class="settings-ico">👥</span>
+          <span class="settings-label">Manage Users</span>
+          <span style="font-size:0.7rem;color:var(--c-text3);">→</span>
+        </a>
+        <div class="settings-item danger" onclick="logout()">
+          <span class="settings-ico">🚪</span>
+          <span class="settings-label">Logout</span>
+        </div>
+      </div>
+    </div>
+    <div class="sidebar-user" id="sidebarUserRow">
+      <div class="user-av">👤</div>
+      <div class="user-info">
+        <div class="user-name" id="userName">Admin</div>
+        <div class="user-role" id="userRole">Administrator</div>
+      </div>
+      <span class="user-chevron">▲</span>
+    </div>
+  </aside>
+
+    <div class="main-wrap">
+      <header class="topbar">
+        <div class="topbar-title">Analytics</div>
+        <div class="topbar-right">
+          <div class="status-pill online">
+            <span class="pulse-dot"></span>
+            <span id="arduinoLabel">Live</span>
+          </div>
+          <span class="topbar-clock" id="clock">00:00:00</span>
+        </div>
+      </header>
+
+      <main class="page-content">
+
+        
+        <div class="g4 gap-b stagger">
+          <div class="card anim-up">
+            <div class="stat-label">Total Alarms</div>
+            <div class="stat-num" id="statAlarms">0</div>
+            <div class="stat-delta stat-ok">↑ Monitoring active</div>
+          </div>
+          <div class="card anim-up">
+            <div class="stat-label">Avg Temperature</div>
+            <div class="stat-num" id="statAvgTemp">—</div>
+            <div class="stat-delta" id="statTempDelta">Calculating…</div>
+          </div>
+          <div class="card anim-up">
+            <div class="stat-label">Peak Smoke</div>
+            <div class="stat-num" id="statPeak">—</div>
+            <div class="stat-delta" id="statPeakDelta">Calculating…</div>
+          </div>
+          <div class="card anim-up">
+            <div class="stat-label">Uptime</div>
+            <div class="stat-num" id="statUptime">00:00</div>
+            <div class="stat-delta stat-ok">Since last boot</div>
+          </div>
+        </div>
+
+        
+        <div class="g2 gap-b stagger">
+          <div class="card anim-up">
+            <div class="card-label">Temperature Trend (°C)</div>
+            <div class="chart-wrap">
+              <canvas id="tempChart"></canvas>
+            </div>
+            <div class="chart-legend">
+              <div class="leg-item">
+                <div class="leg-dot dot-fire"></div>
+                Temperature (°C)
+              </div>
+              <div class="leg-item">
+                <div class="leg-dot dot-warn-dashed"></div>
+                Threshold (60°C)
+              </div>
+            </div>
+          </div>
+
+          <div class="card anim-up">
+            <div class="card-label">Smoke Level Trend (ppm)</div>
+            <div class="chart-wrap">
+              <canvas id="smokeChart"></canvas>
+            </div>
+            <div class="chart-legend">
+              <div class="leg-item">
+                <div class="leg-dot dot-info"></div>
+                Smoke (ppm)
+              </div>
+              <div class="leg-item">
+                <div class="leg-dot dot-warn-dashed"></div>
+                Threshold (300ppm)
+              </div>
+            </div>
+          </div>
+        </div>
+
+        
+        <div class="card anim-up">
+          <div class="card-label">Sensor Range Distribution</div>
+
+          <div class="dist-row">
+            <div class="dist-label">Temperature · Safe (≤60°C)</div>
+            <div class="dist-track"><div id="dtSafe" style="width:90%;" class="dist-fill bar-safe"></div></div>
+            <div class="dist-val" id="dvSafe">90%</div>
+          </div>
+          <div class="dist-row">
+            <div class="dist-label">Temperature · Warning (60–70°C)</div>
+            <div class="dist-track"><div class="dist-fill" id="dtWarn" style="width:7%;"  class="dist-fill bar-warn"></div></div>
+            <div class="dist-val" id="dvWarn">7%</div>
+          </div>
+          <div class="dist-row">
+            <div class="dist-label">Temperature · Critical (&gt;70°C)</div>
+            <div class="dist-track"><div class="dist-fill" id="dtCrit" style="width:3%;"  class="dist-fill bar-danger"></div></div>
+            <div class="dist-val" id="dvCrit">3%</div>
+          </div>
+          <div class="dist-row">
+            <div class="dist-label">Smoke · Safe (≤300ppm)</div>
+            <div class="dist-track"><div id="dsSafe" style="width:95%;" class="dist-fill bar-safe"></div></div>
+            <div class="dist-val" id="dvsSafe">95%</div>
+          </div>
+          <div class="dist-row">
+            <div class="dist-label">Smoke · Critical (&gt;300ppm)</div>
+            <div class="dist-track"><div class="dist-fill" id="dsCrit" style="width:5%;"  class="dist-fill bar-danger"></div></div>
+            <div class="dist-val" id="dvsCrit">5%</div>
+          </div>
+        </div>
+
+      </main>
+
+      <footer class="footer">
+        <span>© 2026 FIREWATCH · Unit 001</span>
+        <span>fourloop@gmail.com · +63 912 345 6789</span>
+        <span>v2.0.1</span>
+      </footer>
+    </div>
+  </div>
+
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/analytics.js"></script>
+
+</body>
+</html>

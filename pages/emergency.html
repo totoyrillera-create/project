@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FIREWATCH — Emergency Control</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="../assets/css/emergency.css">
+</head>
+<body>
+
+<div class="emg-overlay"></div>
+
+<div class="shell">
+  <button class="sidebar-toggle" aria-label="Toggle sidebar" aria-expanded="false">
+    <div class="toggle-icon"><span></span><span></span><span></span></div>
+  </button>
+
+  <div class="sidebar-backdrop"></div>
+
+  <aside class="sidebar">
+    <a class="sidebar-brand" href="dashboard.html">
+      <div class="brand-icon">🔥</div>
+      <div class="brand-text"><strong>FIREWATCH</strong><span>Unit 001</span></div>
+    </a>
+    <nav class="sidebar-nav">
+      <span class="nav-section">Monitor</span>
+      <a class="nav-link" href="dashboard.html"><span class="nav-icon">📊</span> Dashboard</a>
+      <a class="nav-link" href="analytics.html"><span class="nav-icon">📈</span> Analytics</a>
+      <a class="nav-link" href="logs.html"><span class="nav-icon">📋</span> Incident Log<span class="nav-badge" id="sidebarBadge">0</span></a>
+      <span class="nav-section">Control</span>
+      <a class="nav-link nav-emg active" href="emergency.html"><span class="nav-icon">⚠️</span> Emergency</a>
+    </nav>
+    <div class="settings-drawer" id="settingsDrawer">
+      <div class="settings-header">
+        <span class="settings-title">Account &amp; Settings</span>
+        <button class="settings-close" onclick="closeSettings();event.stopPropagation()">✕</button>
+      </div>
+      <div class="settings-body">
+        <div class="settings-item" onclick="event.stopPropagation()">
+          <span class="settings-ico">🌙</span>
+          <span class="settings-label">Light Mode</span>
+          <div class="toggle-sw" id="swLight"></div>
+        </div>
+        <a class="settings-item" href="requests.html" id="reqsLink" style="display:none;">
+          <span class="settings-ico">🔔</span>
+          <span class="settings-label">Access Requests</span>
+          <span class="nav-badge" id="reqsBadge" style="margin-left:auto;">0</span>
+        </a>
+        <a class="settings-item" href="users.html">
+          <span class="settings-ico">👥</span>
+          <span class="settings-label">Manage Users</span>
+          <span style="font-size:0.7rem;color:var(--c-text3);">→</span>
+        </a>
+        <div class="settings-item danger" onclick="logout()">
+          <span class="settings-ico">🚪</span>
+          <span class="settings-label">Logout</span>
+        </div>
+      </div>
+    </div>
+    <div class="sidebar-user" id="sidebarUserRow">
+      <div class="user-av">👤</div>
+      <div class="user-info">
+        <div class="user-name" id="userName">Admin</div>
+        <div class="user-role" id="userRole">Administrator</div>
+      </div>
+      <span class="user-chevron">▲</span>
+    </div>
+  </aside>
+
+  <div class="main-wrap">
+    <header class="topbar">
+      <div class="topbar-title">⚠ Emergency</div>
+      <div class="topbar-right">
+        <div class="status-pill offline">
+          <span class="pulse-dot" style="background:var(--c-danger);box-shadow:0 0 5px var(--c-danger);"></span>
+          Admin Mode
+        </div>
+        <span class="topbar-clock" id="clock">00:00:00</span>
+      </div>
+    </header>
+
+    <main class="page-content">
+
+      <div class="page-header anim-up">
+        <h2>Emergency Control</h2>
+        <p>Manual Overrides · Thresholds · Actuator Intensity</p>
+      </div>
+
+      <!-- Row 1: Override + Thresholds -->
+      <div class="g2 gap-b stagger">
+
+        <div class="card anim-up">
+          <div class="card-label">Manual Override</div>
+
+          <div class="override-row">
+            <span class="ov-ico">🚰</span>
+            <div class="ov-info">
+              <div class="ov-name">Sprinkler System</div>
+              <div class="ov-st" id="stSprinkler">OFF</div>
+            </div>
+            <div class="ov-btns">
+              <button class="btn btn-ghost btn-sm" id="btn_sprinkler_on" onclick="overrideActuator('sprinkler',true)">On</button>
+              <button class="btn btn-active-off btn-sm" id="btn_sprinkler_off" onclick="overrideActuator('sprinkler',false)">Off</button>
+            </div>
+          </div>
+
+          <div class="override-row">
+            <span class="ov-ico">💨</span>
+            <div class="ov-info">
+              <div class="ov-name">Exhaust Fan</div>
+              <div class="ov-st" id="stFan">OFF</div>
+            </div>
+            <div class="ov-btns">
+              <button class="btn btn-ghost btn-sm" id="btn_fan_on" onclick="overrideActuator('fan',true)">On</button>
+              <button class="btn btn-active-off btn-sm" id="btn_fan_off" onclick="overrideActuator('fan',false)">Off</button>
+            </div>
+          </div>
+
+          <div class="override-row">
+            <span class="ov-ico">🔔</span>
+            <div class="ov-info">
+              <div class="ov-name">Alarm Buzzer</div>
+              <div class="ov-st" id="stBuzzer">STANDBY</div>
+            </div>
+            <div class="ov-btns">
+              <button class="btn btn-ghost btn-sm" id="btn_buzzer_on" onclick="overrideActuator('buzzer',true)">On</button>
+              <button class="btn btn-active-off btn-sm" id="btn_buzzer_off" onclick="overrideActuator('buzzer',false)">Off</button>
+            </div>
+          </div>
+
+          <button class="btn btn-ghost btn-full mt-sm" onclick="resetSystemWithAuth()">↺ Full System Reset</button>
+          <button class="panic-btn" onclick="showPanicModal()">🚨 Trigger Full Emergency</button>
+        </div>
+
+        <div class="card anim-up">
+          <div class="card-label">Sensor Thresholds</div>
+          <p class="th-why">The Arduino checks readings every second. When a value crosses your threshold, it automatically triggers the alarm, fan, and sprinkler. Lower = earlier detection; higher = fewer false alarms.</p>
+
+          <div class="th-group">
+            <div class="th-head">
+              <label class="input-label">Temperature Threshold</label>
+              <span class="th-val"><span id="valTemp">60</span>°C</span>
+            </div>
+            <input type="range" min="30" max="100" value="60" id="sliderTemp"
+              oninput="document.getElementById('valTemp').textContent=this.value">
+          </div>
+
+          <div class="th-group">
+            <div class="th-head">
+              <label class="input-label">Smoke Threshold</label>
+              <span class="th-val"><span id="valSmoke">300</span> ppm</span>
+            </div>
+            <input type="range" min="50" max="900" value="300" id="sliderSmoke"
+              oninput="document.getElementById('valSmoke').textContent=this.value">
+          </div>
+
+          <button class="btn btn-primary btn-full" onclick="saveThresholds()">💾 Save Thresholds</button>
+        </div>
+
+      </div>
+
+      <!-- Row 2: Actuator Intensity full-width -->
+      <div class="stagger">
+        <div class="card anim-up">
+          <div class="card-label">Actuator Intensity</div>
+          <p class="th-why">Controls how hard each actuator runs when triggered — lower the fan if the room is small, or reduce sprinkler flow to avoid water damage to equipment.</p>
+
+          <div class="g2">
+            <div class="th-group">
+              <div class="th-head">
+                <label class="input-label">Fan Speed</label>
+                <span class="th-val"><span id="valFanSpeed">50</span>%</span>
+              </div>
+              <input type="range" min="10" max="100" value="50" id="sliderFanSpeed"
+                oninput="document.getElementById('valFanSpeed').textContent=this.value">
+            </div>
+            <div class="th-group">
+              <div class="th-head">
+                <label class="input-label">Sprinkler Flow</label>
+                <span class="th-val"><span id="valSprinklerFlow">50</span>%</span>
+              </div>
+              <input type="range" min="10" max="100" value="50" id="sliderSprinklerFlow"
+                oninput="document.getElementById('valSprinklerFlow').textContent=this.value">
+            </div>
+          </div>
+
+          <button class="btn btn-primary" onclick="saveIntensity()" style="margin-top:4px;">💾 Apply Intensity</button>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <span>© 2026 FIREWATCH · Unit 001</span>
+      <span>fourloop@gmail.com · +63 912 345 6789</span>
+      <span>v2.0.1</span>
+    </footer>
+  </div>
+</div>
+
+<div class="toast" id="toast">✓ Done</div>
+
+<div class="modal-overlay" id="authModal">
+  <div class="modal-box">
+    <div class="modal-icon">🔐</div>
+    <div class="modal-title">Password Required</div>
+    <div class="modal-sub" id="authModalSub">Enter your password to continue.</div>
+    <label class="input-label" for="authPass">Password</label>
+    <input class="input" type="password" id="authPass" placeholder="Enter your password">
+    <div class="modal-error" id="authError"></div>
+    <div class="modal-btns">
+      <button class="btn btn-ghost btn-full" onclick="closeAuthModal()">Cancel</button>
+      <button class="btn btn-primary btn-full" onclick="confirmAuth()">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<script src="../assets/js/app.js"></script>
+<script src="../assets/js/emergency.js"></script>
+
+</body>
+</html>

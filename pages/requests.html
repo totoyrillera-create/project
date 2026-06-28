@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FIREWATCH — Access Requests</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="../assets/css/users.css">
+</head>
+<body>
+<div class="shell">
+  <button class="sidebar-toggle" aria-label="Toggle sidebar" aria-expanded="false">
+    <div class="toggle-icon"><span></span><span></span><span></span></div>
+  </button>
+  <div class="sidebar-backdrop"></div>
+  <aside class="sidebar">
+    <a class="sidebar-brand" href="dashboard.html">
+      <div class="brand-icon">🔥</div>
+      <div class="brand-text"><strong>FIREWATCH</strong><span>Unit 001</span></div>
+    </a>
+    <nav class="sidebar-nav">
+      <span class="nav-section">Monitor</span>
+      <a class="nav-link" href="dashboard.html"><span class="nav-icon">📊</span> Dashboard</a>
+      <a class="nav-link" href="analytics.html"><span class="nav-icon">📈</span> Analytics</a>
+      <a class="nav-link" href="logs.html"><span class="nav-icon">📋</span> Incident Log<span class="nav-badge" id="sidebarBadge">0</span></a>
+      <span class="nav-section">Control</span>
+      <a class="nav-link nav-emg" href="emergency.html"><span class="nav-icon">⚠️</span> Emergency</a>
+    </nav>
+    <div class="settings-drawer" id="settingsDrawer">
+      <div class="settings-header">
+        <span class="settings-title">Account &amp; Settings</span>
+        <button class="settings-close" onclick="closeSettings();event.stopPropagation()">✕</button>
+      </div>
+      <div class="settings-body">
+        <div class="settings-item" onclick="event.stopPropagation()">
+          <span class="settings-ico">🌙</span>
+          <span class="settings-label">Light Mode</span>
+          <div class="toggle-sw" id="swLight"></div>
+        </div>
+        <a class="settings-item active-link" href="requests.html" id="reqsLink">
+          <span class="settings-ico">🔔</span>
+          <span class="settings-label">Access Requests</span>
+          <span class="nav-badge" id="reqsBadge" style="margin-left:auto;">0</span>
+        </a>
+        <a class="settings-item" href="users.html">
+          <span class="settings-ico">👥</span>
+          <span class="settings-label">Manage Users</span>
+          <span style="font-size:0.7rem;color:var(--c-text3);">→</span>
+        </a>
+        <div class="settings-item danger" onclick="logout()">
+          <span class="settings-ico">🚪</span>
+          <span class="settings-label">Logout</span>
+        </div>
+      </div>
+    </div>
+    <div class="sidebar-user" id="sidebarUserRow">
+      <div class="user-av">👤</div>
+      <div class="user-info">
+        <div class="user-name" id="userName">Admin</div>
+        <div class="user-role" id="userRole">Administrator</div>
+      </div>
+      <span class="user-chevron">▲</span>
+    </div>
+  </aside>
+
+  <div class="main-wrap">
+    <header class="topbar">
+      <div class="topbar-title">Access Requests</div>
+      <div class="topbar-right">
+        <div class="status-pill online"><span class="pulse-dot"></span><span>System Online</span></div>
+        <span class="topbar-clock" id="clock">00:00:00</span>
+      </div>
+    </header>
+
+    <main class="page-content">
+      <div class="page-header anim-up">
+        <h2>Access Requests</h2>
+        <p>Review and approve new user requests</p>
+      </div>
+
+      <div class="card anim-up" id="requestsContainer">
+        <div class="card-label">Pending Requests</div>
+        <div id="requestsList">
+          <div class="empty-req">No pending requests</div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <span>© 2026 FIREWATCH · Unit 001</span>
+      <span>fourloop@gmail.com · +63 912 345 6789</span>
+      <span>v2.0.1</span>
+    </footer>
+  </div>
+</div>
+
+<div class="toast" id="toast">✓ Done</div>
+
+<!-- Approve modal: set role + password -->
+<div class="modal-overlay" id="approveModal">
+  <div class="modal-box">
+    <div class="modal-icon">✅</div>
+    <div class="modal-title">Approve Request</div>
+    <div class="modal-sub" id="approveModalSub">Set role and initial password for this user.</div>
+    <div style="display:flex;flex-direction:column;gap:12px;margin-top:4px;">
+      <div>
+        <label class="input-label">Assign Role</label>
+        <select class="input" id="approveRole">
+          <option value="Viewer">Viewer</option>
+          <option value="Operator">Operator</option>
+          <option value="Administrator">Administrator</option>
+        </select>
+      </div>
+      <div>
+        <label class="input-label">Initial Password</label>
+        <input class="input" type="text" id="approvePass" placeholder="Set a password for this user">
+      </div>
+    </div>
+    <div class="modal-btns">
+      <button class="btn btn-ghost btn-full" onclick="closeApproveModal()">Cancel</button>
+      <button class="btn btn-primary btn-full" onclick="confirmApprove()">Approve &amp; Add User</button>
+    </div>
+  </div>
+</div>
+
+<script src="../assets/js/app.js"></script>
+<script src="../assets/js/requests.js"></script>
+</body>
+</html>
