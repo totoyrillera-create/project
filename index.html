@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FIREWATCH — Login</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/login.css">
+</head>
+<body>
+
+<div class="login-root">
+  <div class="login-card">
+
+    <div class="login-logo">
+      <div class="login-logo-icon">🔥</div>
+      <h1>FIREWATCH</h1>
+      <p>Smart Fire Detection System</p>
+    </div>
+
+    <div class="login-error"   id="loginError">⚠ Invalid credentials</div>
+    <div class="login-success" id="loginSuccess"></div>
+
+    <div class="login-fields">
+      <div class="login-field">
+        <span class="login-field-ico">👤</span>
+        <input type="text" id="uname" placeholder="Username" autocomplete="username">
+      </div>
+      <div class="login-field">
+        <span class="login-field-ico">🔒</span>
+        <input type="password" id="upass" placeholder="Password" autocomplete="current-password">
+      </div>
+    </div>
+
+    <div class="login-row">
+      <label><input type="checkbox" id="rememberMe"> Remember me</label>
+      <a href="#">Forgot password?</a>
+    </div>
+
+    <button class="btn-login" id="loginBtn" onclick="doLogin()">AUTHENTICATE</button>
+
+    <div class="login-divider"><span>or</span></div>
+
+    <button class="btn-request" onclick="openRequestModal()">Request Access</button>
+
+    <p class="login-note">Unit 001 · Authorized Personnel Only</p>
+
+  </div>
+</div>
+
+<span class="version-tag">FIREWATCH v2.0.1</span>
+
+<div class="req-modal-overlay" id="reqModal">
+  <div class="req-modal">
+    <h3>Request Access</h3>
+    <p>Your request will be sent to the Administrator for approval.</p>
+    <div class="req-fields">
+      <div class="req-field">
+        <label class="input-label" for="reqName">Full Name</label>
+        <input class="input" type="text" id="reqName" placeholder="e.g. Juan dela Cruz">
+      </div>
+      <div class="req-field">
+        <label class="input-label" for="reqUser">Desired Username</label>
+        <input class="input" type="text" id="reqUser" placeholder="e.g. juan_dc">
+      </div>
+      <div class="req-field">
+        <label class="input-label" for="reqReason">Reason for Access</label>
+        <input class="input" type="text" id="reqReason" placeholder="e.g. Fire safety officer">
+      </div>
+    </div>
+    <div id="reqError" style="font-family:var(--mono);font-size:0.7rem;color:var(--c-danger);margin-bottom:10px;min-height:1em;"></div>
+    <div class="req-btns">
+      <button class="btn btn-ghost btn-full" onclick="closeRequestModal()">Cancel</button>
+      <button class="btn btn-primary btn-full" onclick="submitRequest()">Send Request</button>
+    </div>
+  </div>
+</div>
+
+<script src="assets/js/login.js"></script>
+
+</body>
+</html>
