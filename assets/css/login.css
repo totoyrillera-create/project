@@ -1,0 +1,246 @@
+.login-root {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--c-bg);
+  padding: 20px;
+  transition: background 0.25s;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 380px;
+  animation: cardIn 0.45s var(--spring) both;
+}
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.login-logo {
+  text-align: center;
+  margin-bottom: 28px;
+}
+.login-logo-icon {
+  width: 64px; height: 64px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #bf360c, var(--c-fire));
+  display: inline-grid;
+  place-items: center;
+  font-size: 1.9rem;
+  box-shadow: 0 8px 32px rgba(255,87,34,0.35);
+  margin-bottom: 14px;
+  animation: iconPulse 3s ease-in-out infinite;
+}
+@keyframes iconPulse {
+  0%,100% { box-shadow: 0 8px 32px rgba(255,87,34,0.35); }
+  50%     { box-shadow: 0 8px 44px rgba(255,87,34,0.6); }
+}
+.login-logo h1 {
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--c-text);
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+.login-logo p {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--c-text3);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.login-error {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: rgba(244,67,54,0.1);
+  border: 1px solid rgba(244,67,54,0.28);
+  border-radius: var(--r-sm);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--c-danger);
+  letter-spacing: 0.5px;
+  margin-bottom: 14px;
+}
+.login-error.show { display: flex; animation: shake 0.35s ease; }
+@keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+
+.login-success {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: rgba(0,230,118,0.1);
+  border: 1px solid rgba(0,230,118,0.25);
+  border-radius: var(--r-sm);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--c-safe);
+  letter-spacing: 0.5px;
+  margin-bottom: 14px;
+}
+.login-success.show { display: flex; }
+
+.login-fields { display: flex; flex-direction: column; gap: 12px; margin-bottom: 10px; }
+
+.login-field { position: relative; }
+.login-field input {
+  width: 100%;
+  padding: 13px 14px 13px 42px;
+  background: var(--c-surface);
+  border: 1.5px solid var(--c-border2);
+  border-radius: var(--r-sm);
+  color: var(--c-text);
+  font-family: var(--font);
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.18s, box-shadow 0.18s;
+}
+.login-field input::placeholder { color: var(--c-text3); }
+.login-field input:focus {
+  border-color: var(--c-fire);
+  box-shadow: 0 0 0 3px rgba(255,87,34,0.1);
+}
+.login-field-ico {
+  position: absolute;
+  left: 13px; top: 50%;
+  transform: translateY(-50%);
+  font-size: 1rem;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.login-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px 0 18px;
+  font-size: 0.82rem;
+}
+.login-row label { display: flex; align-items: center; gap: 6px; color: var(--c-text2); cursor: pointer; }
+.login-row a { color: var(--c-fire2); text-decoration: none; font-size: 0.82rem; }
+.login-row a:hover { color: var(--c-fire); }
+
+.btn-login {
+  width: 100%;
+  padding: 13px;
+  background: var(--c-fire);
+  border: none;
+  border-radius: var(--r-sm);
+  color: #fff;
+  font-family: var(--font);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  box-shadow: 0 2px 14px rgba(255,87,34,0.3);
+}
+.btn-login:hover { background: var(--c-fire2); box-shadow: 0 4px 22px rgba(255,87,34,0.45); transform: translateY(-1px); }
+.btn-login:active { transform: scale(0.98); }
+.btn-login:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+.login-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0;
+}
+.login-divider::before,
+.login-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--c-border2);
+}
+.login-divider span {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  color: var(--c-text3);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.btn-request {
+  width: 100%;
+  padding: 12px;
+  background: transparent;
+  border: 1.5px solid var(--c-border2);
+  border-radius: var(--r-sm);
+  color: var(--c-text2);
+  font-family: var(--font);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-request:hover { border-color: var(--c-fire); color: var(--c-fire2); background: rgba(255,87,34,0.04); }
+
+.login-note {
+  text-align: center;
+  margin-top: 20px;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--c-text3);
+  letter-spacing: 1px;
+}
+
+.version-tag {
+  position: fixed;
+  bottom: 18px; right: 20px;
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  color: var(--c-text3);
+  letter-spacing: 2px;
+  z-index: 5;
+}
+
+/* Request modal */
+.req-modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(5px);
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.req-modal-overlay.show { display: flex; }
+.req-modal {
+  background: var(--c-surface);
+  border: 1px solid var(--c-border2);
+  border-radius: var(--r);
+  padding: 30px 26px;
+  width: 100%;
+  max-width: 360px;
+  animation: cardIn 0.28s var(--spring) both;
+}
+.req-modal h3 { font-size: 1.05rem; font-weight: 700; color: var(--c-text); margin-bottom: 5px; }
+.req-modal p  { font-family: var(--mono); font-size: 0.65rem; color: var(--c-text3); letter-spacing: 1px; margin-bottom: 20px; }
+.req-fields   { display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px; }
+.req-field    { display: flex; flex-direction: column; gap: 5px; }
+.req-btns     { display: flex; gap: 8px; }
+
+body.light .login-field input {
+  background: #ffffff;
+  border-color: rgba(0,0,0,0.18);
+  color: #0d0d1a;
+}
+body.light .login-field input::placeholder {
+  color: rgba(10,10,26,0.4);
+}
+body.light .btn-login {
+  background: #d94010;
+}
+body.light .btn-request {
+  border-color: rgba(0,0,0,0.2);
+  color: #2a2a3a;
+}
+body.light .req-modal {
+  box-shadow: 0 8px 40px rgba(0,0,0,0.18);
+}

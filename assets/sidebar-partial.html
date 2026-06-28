@@ -1,0 +1,43 @@
+<!--
+  IGNISGUARD — Shared Sidebar Partial
+  Copy this block into each page's <body>.
+  Set class="nav-link active" on the current page link.
+  Update logout href to correct relative path (../ for pages/).
+-->
+
+<div class="sidebar-backdrop"></div>
+
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-icon">🔥</div>
+    <div class="brand-text">
+      <strong>IgnisGuard</strong>
+      <span>Unit 001</span>
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <span class="nav-section">Monitor</span>
+    <a class="nav-link" href="dashboard.html"><span class="nav-icon">📊</span> Dashboard</a>
+    <a class="nav-link" href="analytics.html"><span class="nav-icon">📈</span> Analytics</a>
+    <a class="nav-link" href="logs.html">
+      <span class="nav-icon">📋</span> Incident Log
+      <span class="nav-badge" id="sidebarBadge">0</span>
+    </a>
+
+    <span class="nav-section">Control</span>
+    <a class="nav-link nav-emg" href="emergency.html"><span class="nav-icon">⚠️</span> Emergency</a>
+
+    <span class="nav-section">System</span>
+    <a class="nav-link" href="../index.html" onclick="logout(); return false;"><span class="nav-icon">🚪</span> Logout</a>
+  </nav>
+
+  <div class="sidebar-user">
+    <div class="user-av">👤</div>
+    <div class="user-info">
+      <div class="user-name" id="userName">Admin</div>
+      <div class="user-role" id="userRole">Administrator</div>
+    </div>
+    <button class="btn-logout" onclick="logout()" title="Logout">⏻</button>
+  </div>
+</aside>
